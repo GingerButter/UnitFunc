@@ -12,12 +12,19 @@ import Accelerate
 func readAudioFile(url: URL) -> [Float] {
     let file = try! AVAudioFile(forReading: url)
     let format = file.processingFormat
+    print(file.fileFormat)
+//    let format = AVAudioFormat(commonFormat: .pcmFormatFloat32, sampleRate: file.fileFormat.sampleRate, channels: 2, interleaved: false)!
     let buffer = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: UInt32(file.length))!
     try! file.read(into: buffer)
     let sampleRate = file.fileFormat.sampleRate
     print("Sample rate: \(sampleRate)")
     print("FrameLength: \(buffer.frameLength)")
     return Array(UnsafeBufferPointer(start: buffer.floatChannelData![0], count: Int(buffer.frameLength)))
+}
+
+func showFormat(url: URL) -> Void {
+    let file = try! AVAudioFile(forReading: url)
+    print(file.processingFormat)
 }
 
 func performFFT(data: [Float]) -> [Float] {
@@ -47,4 +54,111 @@ func performFFT(data: [Float]) -> [Float] {
     vDSP_destroy_fftsetup(fftSetup)
     
     return magnitudes
+}
+
+func synthesizeSignal(frequencyAmplitudePairs: [(f: Float, a: Float)],
+                             count: Int) -> [Float] {
+    
+    let tau: Float = .pi * 2
+    let signal: [Float] = (0 ..< count).map { index in
+        frequencyAmplitudePairs.reduce(0) { accumulator, frequenciesAmplitudePair in
+            let normalizedIndex = Float(index) / Float(count)
+            return accumulator + sin(normalizedIndex * frequenciesAmplitudePair.f * tau) * frequenciesAmplitudePair.a
+        }
+    }
+    
+    return signal
+}
+
+func FFT(data:[Float]) -> Void {
+    let n = vDSP_Length(data.count)
+    print(n)
+    let log2n = vDSP_Length(log2(Float(n)))
+//    let n = vDSP_Length(2048)
+//
+//
+//    let frequencyAmplitudePairs = [(f: Float(2), a: Float(0.8)),
+//                                   (f: Float(7), a: Float(1.2)),
+//                                   (f: Float(24), a: Float(0.7)),
+//                                   (f: Float(50), a: Float(1.0))]
+//
+//
+//    let data = synthesizeSignal(frequencyAmplitudePairs: frequencyAmplitudePairs,
+//                                count: Int(n))
+//    let log2n = vDSP_Length(log2(Float(n)))
+    guard let fftSetUp = vDSP.FFT(log2n: log2n,
+                                  radix: .radix2,
+                                  ofType: DSPSplitComplex.self) else {
+                                    fatalError("Can't create FFT Setup.")
+    }
+    let halfN = Int(n / 2)
+    var forwardInputReal = [Float](repeating: 0, count: halfN)
+    var forwardInputImag = [Float](repeating: 0, count: halfN)
+    var forwardOutputReal = [Float](repeating: 0, count: halfN)
+    var forwardOutputImag = [Float](repeating: 0, count: halfN)
+    forwardInputReal.withUnsafeMutableBufferPointer { forwardInputRealPtr in
+        forwardInputImag.withUnsafeMutableBufferPointer { forwardInputImagPtr in
+            forwardOutputReal.withUnsafeMutableBufferPointer { forwardOutputRealPtr in
+                forwardOutputImag.withUnsafeMutableBufferPointer { forwardOutputImagPtr in
+                    
+                    // Create a `DSPSplitComplex` to contain the signal.
+                    var forwardInput = DSPSplitComplex(realp: forwardInputRealPtr.baseAddress!,
+                                                       imagp: forwardInputImagPtr.baseAddress!)
+                    
+                    // Convert the real values in `signal` to complex numbers.
+                    data.withUnsafeBytes {
+                        vDSP.convert(interleavedComplexVector: [DSPComplex]($0.bindMemory(to: DSPComplex.self)),
+                                     toSplitComplexVector: &forwardInput)
+                    }
+                    
+                    // Create a `DSPSplitComplex` to receive the FFT result.
+                    var forwardOutput = DSPSplitComplex(realp: forwardOutputRealPtr.baseAddress!,
+                                                        imagp: forwardOutputImagPtr.baseAddress!)
+                    
+                    // Perform the forward FFT.
+                    fftSetUp.forward(input: forwardInput,
+                                     output: &forwardOutput)
+                }
+            }
+        }
+    }
+    let autospectrum = [Float](unsafeUninitializedCapacity: halfN) {
+        autospectrumBuffer, initializedCount in
+        
+        // The `vDSP_zaspec` function accumulates its output. Clear the
+        // uninitialized `autospectrumBuffer` before computing the spectrum.
+        vDSP.clear(&autospectrumBuffer)
+        
+        forwardOutputReal.withUnsafeMutableBufferPointer { forwardOutputRealPtr in
+            forwardOutputImag.withUnsafeMutableBufferPointer { forwardOutputImagPtr in
+                
+                var frequencyDomain = DSPSplitComplex(realp: forwardOutputRealPtr.baseAddress!,
+                                                      imagp: forwardOutputImagPtr.baseAddress!)
+                
+                vDSP_zaspec(&frequencyDomain,
+                            autospectrumBuffer.baseAddress!,
+                            vDSP_Length(halfN))
+            }
+        }
+        initializedCount = halfN
+    }
+    print(autospectrum.count)
+    let componentFrequencyAmplitudePairs = autospectrum.enumerated().filter {
+//        print("\($0)")
+        return $0.element > 10000
+        
+    }.map {
+        return ($0.offset, sqrt($0.element) / Float(n))
+    }
+    print(componentFrequencyAmplitudePairs.count)
+
+
+    // Prints:
+    //     ["frequency: 2 | amplitude: 0.80", "frequency: 7 | amplitude: 1.20",
+    //      "frequency: 24 | amplitude: 0.70", "frequency: 50 | amplitude: 1.00"]"
+
+
+    print(componentFrequencyAmplitudePairs.map {
+        "frequency: \($0.0) | amplitude: \(String(format: "%.4f", $0.1))"
+    })
 }
