@@ -11,7 +11,7 @@ struct ContentView: View {
     var body: some View {
         Text("Hello, world!")
             .onAppear {
-                guard let url = Bundle.main.url(forResource: "signal", withExtension: "wav") else {
+                guard let url = Bundle.main.url(forResource: "Pallas", withExtension: "wav") else {
                     fatalError("Failed to locate file in bundle.")
                 }
                 let data = readAudioFile(url: url)

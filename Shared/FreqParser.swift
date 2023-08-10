@@ -12,11 +12,16 @@ import Accelerate
 func readAudioFile(url: URL) -> [Float] {
     let file = try! AVAudioFile(forReading: url)
     let format = file.processingFormat
-    print(file.fileFormat)
-//    let format = AVAudioFormat(commonFormat: .pcmFormatFloat32, sampleRate: file.fileFormat.sampleRate, channels: 2, interleaved: false)!
-    let buffer = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: UInt32(file.length))!
-    try! file.read(into: buffer)
     let sampleRate = file.fileFormat.sampleRate
+    print(file.fileFormat)
+    let lenFile = AVAudioFrameCount(file.length)
+    let lenBuf = AVAudioFrameCount(Int(pow(2, floor(log2(Float(lenFile))))))
+    print("lenBuf: \(lenBuf)")
+    let startFrame = AVAudioFramePosition(lenFile - lenBuf)
+    let buffer = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: lenBuf)!
+    file.framePosition = startFrame
+    try! file.read(into: buffer, frameCount: lenBuf)
+    
     print("Sample rate: \(sampleRate)")
     print("FrameLength: \(buffer.frameLength)")
     return Array(UnsafeBufferPointer(start: buffer.floatChannelData![0], count: Int(buffer.frameLength)))
@@ -72,8 +77,12 @@ func synthesizeSignal(frequencyAmplitudePairs: [(f: Float, a: Float)],
 
 func FFT(data:[Float]) -> Void {
     let n = vDSP_Length(data.count)
+    let freqResolution = 44100 / Double(n)
     print(n)
+    let window = vDSP.window(ofType: Float.self, usingSequence: .hanningDenormalized, count: data.count, isHalfWindow: false)
+    let signal = vDSP.multiply(data, window)
     let log2n = vDSP_Length(log2(Float(n)))
+    print(log2n)
 //    let n = vDSP_Length(2048)
 //
 //
@@ -106,7 +115,8 @@ func FFT(data:[Float]) -> Void {
                                                        imagp: forwardInputImagPtr.baseAddress!)
                     
                     // Convert the real values in `signal` to complex numbers.
-                    data.withUnsafeBytes {
+//                    data.withUnsafeBytes {
+                    signal.withUnsafeBytes {
                         vDSP.convert(interleavedComplexVector: [DSPComplex]($0.bindMemory(to: DSPComplex.self)),
                                      toSplitComplexVector: &forwardInput)
                     }
@@ -142,13 +152,15 @@ func FFT(data:[Float]) -> Void {
         }
         initializedCount = halfN
     }
-    print(autospectrum.count)
+//    print(autospectrum.count)
+//    let value = vDSP.rootMeanSquare(autospectrum)
+//    autospectrum = vDSP.divide(autospectrum, value)
     let componentFrequencyAmplitudePairs = autospectrum.enumerated().filter {
 //        print("\($0)")
         return $0.element > 10000
         
     }.map {
-        return ($0.offset, sqrt($0.element) / Float(n))
+        return (Double($0.offset)*freqResolution, sqrt($0.element) / Float(n))
     }
     print(componentFrequencyAmplitudePairs.count)
 

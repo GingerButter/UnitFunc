@@ -21,6 +21,14 @@
 		C408929E2A7864B00074416A /* FreqParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = C408929C2A7864B00074416A /* FreqParser.swift */; };
 		C40892A32A7872900074416A /* 400hz.wav in Resources */ = {isa = PBXBuildFile; fileRef = C40892A22A7872900074416A /* 400hz.wav */; };
 		C40892A42A7872900074416A /* 400hz.wav in Resources */ = {isa = PBXBuildFile; fileRef = C40892A22A7872900074416A /* 400hz.wav */; };
+		C4D9D90F2A84A113006DA93B /* signal_2s.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = C4D9D90E2A84A113006DA93B /* signal_2s.mp3 */; };
+		C4D9D9102A84A113006DA93B /* signal_2s.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = C4D9D90E2A84A113006DA93B /* signal_2s.mp3 */; };
+		C4D9D9112A84A113006DA93B /* signal_2s.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = C4D9D90E2A84A113006DA93B /* signal_2s.mp3 */; };
+		C4D9D9122A84A113006DA93B /* signal_2s.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = C4D9D90E2A84A113006DA93B /* signal_2s.mp3 */; };
+		C4D9D9142A84A271006DA93B /* Pallas.wav in Resources */ = {isa = PBXBuildFile; fileRef = C4D9D9132A84A271006DA93B /* Pallas.wav */; };
+		C4D9D9152A84A271006DA93B /* Pallas.wav in Resources */ = {isa = PBXBuildFile; fileRef = C4D9D9132A84A271006DA93B /* Pallas.wav */; };
+		C4D9D9162A84A271006DA93B /* Pallas.wav in Resources */ = {isa = PBXBuildFile; fileRef = C4D9D9132A84A271006DA93B /* Pallas.wav */; };
+		C4D9D9172A84A271006DA93B /* Pallas.wav in Resources */ = {isa = PBXBuildFile; fileRef = C4D9D9132A84A271006DA93B /* Pallas.wav */; };
 		C4DDC3DA2A7A3A68004E9853 /* sine_400Hz.wav in Resources */ = {isa = PBXBuildFile; fileRef = C4DDC3D92A7A3A68004E9853 /* sine_400Hz.wav */; };
 		C4DDC3DB2A7A3A68004E9853 /* sine_400Hz.wav in Resources */ = {isa = PBXBuildFile; fileRef = C4DDC3D92A7A3A68004E9853 /* sine_400Hz.wav */; };
 		C4DDC3DC2A7A3A68004E9853 /* sine_400Hz.wav in Resources */ = {isa = PBXBuildFile; fileRef = C4DDC3D92A7A3A68004E9853 /* sine_400Hz.wav */; };
@@ -71,6 +79,8 @@
 		C40892862A78637E0074416A /* Tests_macOSLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests_macOSLaunchTests.swift; sourceTree = "<group>"; };
 		C408929C2A7864B00074416A /* FreqParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreqParser.swift; sourceTree = "<group>"; };
 		C40892A22A7872900074416A /* 400hz.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = 400hz.wav; sourceTree = "<group>"; };
+		C4D9D90E2A84A113006DA93B /* signal_2s.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = signal_2s.mp3; path = ../../../Downloads/signal_2s.mp3; sourceTree = "<group>"; };
+		C4D9D9132A84A271006DA93B /* Pallas.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = Pallas.wav; sourceTree = "<group>"; };
 		C4DDC3D92A7A3A68004E9853 /* sine_400Hz.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = sine_400Hz.wav; sourceTree = "<group>"; };
 		C4DDC3DE2A7A4364004E9853 /* sine_100Hz.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = sine_100Hz.wav; sourceTree = "<group>"; };
 		C4DDC3E32A7A43D5004E9853 /* sine_600Hz.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = sine_600Hz.wav; sourceTree = "<group>"; };
@@ -169,6 +179,8 @@
 				C4DDC3DE2A7A4364004E9853 /* sine_100Hz.wav */,
 				C4DDC3E32A7A43D5004E9853 /* sine_600Hz.wav */,
 				C4DDC3E82A7A45A7004E9853 /* signal.wav */,
+				C4D9D90E2A84A113006DA93B /* signal_2s.mp3 */,
+				C4D9D9132A84A271006DA93B /* Pallas.wav */,
 			);
 			path = "Tests macOS";
 			sourceTree = "<group>";
@@ -301,7 +313,9 @@
 				C4DDC3E42A7A43D5004E9853 /* sine_600Hz.wav in Resources */,
 				C408928C2A78637E0074416A /* Assets.xcassets in Resources */,
 				C4DDC3E92A7A45A7004E9853 /* signal.wav in Resources */,
+				C4D9D9142A84A271006DA93B /* Pallas.wav in Resources */,
 				C4DDC3DA2A7A3A68004E9853 /* sine_400Hz.wav in Resources */,
+				C4D9D90F2A84A113006DA93B /* signal_2s.mp3 in Resources */,
 				C40892A32A7872900074416A /* 400hz.wav in Resources */,
 				C4DDC3DF2A7A4364004E9853 /* sine_100Hz.wav in Resources */,
 			);
@@ -312,10 +326,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				C4DDC3E52A7A43D5004E9853 /* sine_600Hz.wav in Resources */,
+				C4D9D9102A84A113006DA93B /* signal_2s.mp3 in Resources */,
 				C4DDC3E02A7A4364004E9853 /* sine_100Hz.wav in Resources */,
 				C4DDC3DB2A7A3A68004E9853 /* sine_400Hz.wav in Resources */,
 				C408928D2A78637E0074416A /* Assets.xcassets in Resources */,
 				C4DDC3EA2A7A45A7004E9853 /* signal.wav in Resources */,
+				C4D9D9152A84A271006DA93B /* Pallas.wav in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -324,10 +340,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				C4DDC3E62A7A43D5004E9853 /* sine_600Hz.wav in Resources */,
+				C4D9D9112A84A113006DA93B /* signal_2s.mp3 in Resources */,
 				C4DDC3E12A7A4364004E9853 /* sine_100Hz.wav in Resources */,
 				C4DDC3DC2A7A3A68004E9853 /* sine_400Hz.wav in Resources */,
 				C40892A42A7872900074416A /* 400hz.wav in Resources */,
 				C4DDC3EB2A7A45A7004E9853 /* signal.wav in Resources */,
+				C4D9D9162A84A271006DA93B /* Pallas.wav in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -336,9 +354,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				C4DDC3EC2A7A45A7004E9853 /* signal.wav in Resources */,
+				C4D9D9172A84A271006DA93B /* Pallas.wav in Resources */,
 				C4DDC3E72A7A43D5004E9853 /* sine_600Hz.wav in Resources */,
 				C4DDC3DD2A7A3A68004E9853 /* sine_400Hz.wav in Resources */,
 				C4DDC3E22A7A4364004E9853 /* sine_100Hz.wav in Resources */,
+				C4D9D9122A84A113006DA93B /* signal_2s.mp3 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
