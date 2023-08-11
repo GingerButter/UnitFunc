@@ -9,6 +9,8 @@ import SwiftUI
 import Foundation
 import AVFoundation
 import MediaPlayer
+import UIKit
+import MobileCoreServices
 
 struct MediaPicker: UIViewControllerRepresentable {
     @Binding var mediaItems: [MPMediaItem]
